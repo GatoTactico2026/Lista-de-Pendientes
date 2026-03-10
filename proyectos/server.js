@@ -2,22 +2,22 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-function servirHTML(req, res) {
+const servidor = http.createServer((req, res) => {
     const rutaArchivo = path.join(__dirname, 'index.html');
 
     fs.readFile(rutaArchivo, (error, data) => {
         if (error) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
             res.end('Error al cargar el archivo');
         } else {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
             res.end(data);
         }
     });
-}
+});
 
-const servidor = http.createServer(servirHTML);
-
-servidor.listen(8080, () => {
-    console.log('Servidor corriendo en http://localhost:8080');
+// Iniciamos el servidor
+const PORT = 8080;
+servidor.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
