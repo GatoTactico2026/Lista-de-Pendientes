@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const pendientes = document.getElementById("pendientes");
     const realizado = document.getElementById("realizadas");
 
-    // Asignación de eventos de forma segura
     document.getElementById("btn-agregar").addEventListener("click", agregar);
     document.getElementById("btn-mover").addEventListener("click", mover);
     document.getElementById("btn-remover").addEventListener("click", remover);
@@ -18,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function agregar() {
         const texto = input.value.trim();
         if (!texto) { alert("Debes escribir algo"); return; }
-        
+
         const res = await fetch('/api/agregar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -29,10 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("El servidor rechazó la tarea: Ya existe o está vacía");
         } else {
             input.value = "";
-            // Para que se vea en pantalla, añadimos el elemento visualmente aquí
+
             const li = document.createElement("li");
-            li.className = "list-group-item d-flex align-items-center";
-            li.innerHTML = `<i class="bi bi-square me-3" style="cursor:pointer"></i> <span>${texto}</span>`;
+            li.style.marginBottom = "8px";
+
+            li.innerHTML = `
+                <label>
+                    <input type="checkbox" style="margin-right:8px; cursor:pointer;">
+                    <span>${texto}</span>
+                </label>
+            `;
+
             pendientes.appendChild(li);
             salvar();
         }
@@ -40,12 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function mover() {
         const seleccionadas = pendientes.querySelectorAll(".marcada");
+
         seleccionadas.forEach(li => {
             li.classList.remove("marcada");
-            li.classList.add("text-decoration-line-through", "text-muted");
-            li.querySelector("i").className = "bi bi-square me-3";
+            li.style.textDecoration = "line-through";
+            li.style.color = "gray";
+
+            const checkbox = li.querySelector("input");
+            checkbox.checked = false;
+
             realizado.appendChild(li);
         });
+
         salvar();
     }
 
@@ -54,18 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
         salvar();
     }
 
-    // Delegación de eventos para los iconos (porque los elementos se crean dinámicamente)
-    document.addEventListener("click", (e) => {
-        if (e.target.classList.contains("bi-square") || e.target.classList.contains("bi-check-square-fill")) {
+    document.addEventListener("change", (e) => {
+        if (e.target.type === "checkbox") {
             const li = e.target.closest("li");
-            const icono = li.querySelector("i");
-            if (icono.classList.contains("bi-square")) {
-                icono.className = "bi bi-check-square-fill me-3 text-primary";
+
+            if (e.target.checked) {
                 li.classList.add("marcada");
             } else {
-                icono.className = "bi bi-square me-3";
                 li.classList.remove("marcada");
             }
+
             salvar();
         }
     });
@@ -74,7 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
         await fetch('/api/guardar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pendientes: pendientes.innerHTML, realizadas: realizado.innerHTML })
+            body: JSON.stringify({
+                pendientes: pendientes.innerHTML,
+                realizadas: realizado.innerHTML
+            })
         });
     }
 
