@@ -49,6 +49,6 @@ app.post('/api/guardar', (req, res) => {
     res.sendStatus(200);
 });
 
-app.listen(8080, () => {
-    console.log('Servidor corriendo en http://localhost:8080');
+app.listen(8080, '0.0.0.0', () => {
+    console.log('Servidor corriendo en http://0.0.0.0:8080');
 });
