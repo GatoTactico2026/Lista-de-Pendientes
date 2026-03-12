@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-mover").addEventListener("click", mover);
     document.getElementById("btn-remover").addEventListener("click", remover);
 
+//Cargar mis archivos
     async function cargar() {
         const res = await fetch('/api/estado');
         const data = await res.json();
