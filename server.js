@@ -5,7 +5,7 @@ const path = require('path'); // utilidades de ruta
 app.use(express.json()); // analiza JSON de peticiones
 
 // Usamos path.join para evitar errores de rutas en Windows/Linux
-app.use(express.static(path.join(__dirname, 'proyectos', 'public'))); // sirve archivos estáticos
+app.use(express.static(path.join(__dirname, 'proyectos', 'public'))); // sirve como archivos estáticos
 
 let estado = { pendientes: "", realizadas: "" }; // estado guardado en memoria
 let nombres = [];  // lista para prevenir duplicados
