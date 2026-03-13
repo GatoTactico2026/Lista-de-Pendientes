@@ -17,13 +17,13 @@ function sincronizarNombres() { // actualiza lista de nombres
     let match; // variable auxiliar
     
     // Extraer nombres de pendientes
-    while ((match = regex.exec(estado.pendientes)) !== null) { // itera coincidencias
+    while ((match = regex.exec(estado.pendientes)) !== null) { // recorrer coincidencias
         nombres.push(match[1].toLowerCase()); // agrega en minúsculas
     }
     
     // Extraer nombres de realizadas
     regex.lastIndex = 0; // reinicia busqueda
-    while ((match = regex.exec(estado.realizadas)) !== null) { // itera completadas
+    while ((match = regex.exec(estado.realizadas)) !== null) { // recorrer completadas
         nombres.push(match[1].toLowerCase()); // agrega completado
     }
 }
@@ -35,7 +35,7 @@ app.get('/', (req, res) => { // GET raiz
 
 app.get('/api/estado', (req, res) => res.json(estado)); // GET estado actual
 
-app.post('/api/agregar', (req, res) => { // POST agregar tarea // POST agregar tarea
+app.post('/api/agregar', (req, res) => { // POST agregar tarea
     const { nombre } = req.body; // recibe nombre de tarea
     if (!nombre || nombres.includes(nombre.toLowerCase())) return res.status(400).send(); // valida
     
